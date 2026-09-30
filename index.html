@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>우리 반 모둠 만들기</title>
+<style>
+:root{font-family:system-ui,'Malgun Gothic',sans-serif;color:#19342f;background:#f3f6f2}*{box-sizing:border-box}body{margin:0}main{max-width:1100px;margin:auto;padding:48px 24px}header{display:flex;justify-content:space-between;align-items:center;gap:20px}.eyebrow{font-size:12px;letter-spacing:3px;font-weight:800;color:#628177}h1{font-size:clamp(28px,5vw,44px);margin:10px 0}p{color:#647970;line-height:1.7}button,input,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:12px;padding:13px 20px;font-weight:700;background:#e4ebe5;color:#23483d}button:hover{filter:brightness(.96)}button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #d39b42;outline-offset:3px}.hero{margin:32px 0;background:#173f34;color:white;padding:38px;border-radius:24px;display:flex;justify-content:space-between;align-items:center;gap:24px}.hero p{color:#c0d7cb;margin-bottom:0}.hero h2{margin:0;font-size:25px}#draw{background:#e5edb5;color:#24402a;font-size:18px;min-width:170px;padding:20px;user-select:none}#status{min-height:28px}#results{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}.group{border:1px solid #dce5db;background:#fff;border-radius:18px;padding:24px;animation:appear .35s ease both}.group h2{font-size:18px;margin:0 0 18px}.group small{float:right;color:#8a998e;font-weight:400}.names{display:flex;gap:9px;flex-wrap:wrap}.name{background:#eff4ec;padding:9px 13px;border-radius:9px}.empty{grid-column:1/-1;text-align:center;padding:64px 20px;border:2px dashed #d2ddd1;border-radius:20px;color:#819085}dialog{width:min(760px,calc(100% - 24px));max-height:90vh;border:0;border-radius:22px;padding:28px;color:#19342f}dialog::backdrop{background:#142e26aa}dialog h2{margin-top:0}.fields{display:grid;grid-template-columns:1fr 1fr;gap:20px}label{display:block;font-weight:700;margin:16px 0 8px}textarea,input{width:100%;border:1px solid #cbd7ce;border-radius:10px;padding:12px;background:#fbfcfa;color:#19342f}textarea{height:230px;resize:vertical;line-height:1.6}.hint{font-size:13px;line-height:1.6;color:#6b7f73}.actions{display:flex;justify-content:flex-end;gap:10px;margin-top:22px}.primary{background:#245b46;color:#fff}#error{color:#ac352a;white-space:pre-line}footer{margin-top:30px;font-size:12px;color:#829286}@keyframes appear{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}@media(max-width:600px){main{padding:28px 16px}.hero{flex-direction:column;align-items:stretch;padding:26px}.fields{grid-template-columns:1fr}header button{white-space:nowrap;padding:10px}textarea{height:170px}}@media(prefers-reduced-motion:reduce){.group{animation:none}}
+</style>
+</head>
+<body>
+<main>
+<header><div><div class="eyebrow">CLASSROOM TOGETHER</div><h1>우리 반 모둠 만들기</h1><p>함께할 친구들, 새로운 모둠으로 만나보세요.</p></div><button id="settings">설정</button></header>
+<section class="hero"><div><h2>오늘은 누구와 함께할까요?</h2><p id="summary"></p></div><button id="draw">모둠 만들기 ↗</button></section>
+<p id="status" role="status" aria-live="polite">버튼을 눌러 모둠을 만들어 보세요.</p>
+<section id="results" aria-label="모둠 배정 결과"><div class="empty">아직 모둠이 구성되지 않았어요.</div></section>
+<footer>우리 반의 새로운 시작</footer>
+</main>
+<dialog id="dialog">
+<form id="form">
+<h2>모둠 설정</h2>
+<p class="hint">명단을 입력하고 모둠 수를 선택하세요. 지정 모둠은 각 줄에 한 모둠씩 입력합니다.</p>
+<label for="count">모둠 수</label><input id="count" type="number" min="1" max="100" required>
+<div class="fields"><div><label for="roster">학생 명단</label><textarea id="roster" required placeholder="김민준&#10;이서연&#10;박지호"></textarea><div class="hint">줄바꿈 또는 쉼표로 구분합니다. 동명이인은 번호를 붙여 구별하세요.</div></div>
+<div><label for="preset">미리 지정할 모둠</label><textarea id="preset" placeholder="김민준, 이서연&#10;박지호, 최하윤"></textarea><div class="hint">한 줄이 한 모둠입니다. 학생은 쉼표로 구분하고 명단의 모든 학생을 한 번씩 넣으세요. 비워두어도 무작위 배정은 가능합니다.</div></div></div>
+<p class="hint">사용법: 만들기 버튼의 좌클릭·우클릭은 무작위 배정, 휠 버튼 클릭은 지정 배정입니다. 두 방식의 결과 화면은 동일합니다. 설정은 이 브라우저에 저장되며, 비밀번호로 보호되지 않습니다.</p>
+<p id="error" role="alert"></p><div class="actions"><button type="button" id="cancel">취소</button><button class="primary" type="submit">설정 저장</button></div>
+</form>
+</dialog>
+<script>
+'use strict';
+const $=id=>document.getElementById(id),KEY='classroom-groups-v1';
+const demo=['김민준','이서연','박지호','최하윤','정도윤','강서윤','조예준','윤지우','장시우','임하린','한주원','오수아'];
+let config={roster:demo,count:3,preset:[demo.slice(0,4),demo.slice(4,8),demo.slice(8,12)]};
+function validate(c){
+ if(!c||!Array.isArray(c.roster)||!c.roster.length||c.roster.some(n=>typeof n!=='string'||!n.trim()))throw Error('학생 명단을 입력하세요.');
+ if(new Set(c.roster).size!==c.roster.length)throw Error('명단에 같은 이름이 있습니다. 번호를 붙여 구분하세요.');
+ if(!Number.isInteger(c.count)||c.count<1||c.count>100||c.count>c.roster.length)throw Error('모둠 수는 1 이상, 학생 수 이하의 정수로 입력하세요. (최대 100)');
+ if(!Array.isArray(c.preset))throw Error('지정 모둠 형식을 확인하세요.');
+ if(c.preset.length){
+  if(c.preset.length!==c.count||c.preset.some(g=>!Array.isArray(g)||!g.length))throw Error('지정 모둠의 줄 수와 모둠 수를 맞춰주세요.');
+  const flat=c.preset.flat();
+  if(flat.length!==c.roster.length||new Set(flat).size!==flat.length||flat.some(n=>!c.roster.includes(n)))throw Error('지정 모둠에는 명단의 모든 학생을 정확히 한 번씩 넣어주세요.');
+ }
+ return c;
+}
+try{const saved=localStorage.getItem(KEY);if(saved)config=validate(JSON.parse(saved));}catch{}
+function summary(){$('summary').textContent=`학생 ${config.roster.length}명 · ${config.count}개 모둠`;}
+summary();
+$('settings').addEventListener('click',()=>{
+ $('roster').value=config.roster.join('\n');$('count').value=config.count;$('preset').value=config.preset.map(g=>g.join(', ')).join('\n');$('error').textContent='';$('dialog').showModal();
+});
+$('cancel').addEventListener('click',()=>$('dialog').close());
+$('form').addEventListener('submit',e=>{
+ e.preventDefault();
+ try{
+  const next=validate({roster:$('roster').value.split(/[\n,]+/).map(s=>s.trim()).filter(Boolean),count:Number($('count').value),preset:$('preset').value.split(/\r?\n/).map(s=>s.trim()).filter(Boolean).map(s=>s.split(',').map(n=>n.trim()).filter(Boolean))});
+  let persisted=true;try{localStorage.setItem(KEY,JSON.stringify(next));}catch{persisted=false;}
+  config=next;summary();$('results').replaceChildren();const empty=document.createElement('div');empty.className='empty';empty.textContent='설정을 저장했어요. 모둠을 만들어 보세요.';$('results').append(empty);
+  $('status').textContent=persisted?'설정이 저장되었습니다.': '설정을 적용했습니다. 브라우저 저장이 제한되어 창을 닫으면 사라질 수 있습니다.';$('dialog').close();
+ }catch(err){$('error').textContent=err.message;}
+});
+function randomInt(max){const a=new Uint32Array(1),limit=4294967296-4294967296%max;do{crypto.getRandomValues(a);}while(a[0]>=limit);return a[0]%max;}
+function makeGroups(fixed){
+ if(fixed&&!config.preset.length){$('status').textContent='설정에서 모둠 구성을 확인해 주세요.';return;}
+ let groups;
+ if(fixed){groups=config.preset.map(g=>[...g]);}else{
+  const shuffled=[...config.roster];for(let i=shuffled.length-1;i>0;i--){const j=randomInt(i+1);[shuffled[i],shuffled[j]]=[shuffled[j],shuffled[i]];}
+  groups=Array.from({length:config.count},()=>[]);shuffled.forEach((name,i)=>groups[i%config.count].push(name));
+ }
+ $('results').replaceChildren();
+ groups.forEach((names,i)=>{const card=document.createElement('article');card.className='group';card.style.animationDelay=`${i*35}ms`;const title=document.createElement('h2');title.textContent=`${i+1}모둠`;const size=document.createElement('small');size.textContent=`${names.length}명`;title.append(size);const list=document.createElement('div');list.className='names';names.forEach(name=>{const el=document.createElement('span');el.className='name';el.textContent=name;list.append(el);});card.append(title,list);$('results').append(card);});
+ $('status').textContent=`${config.roster.length}명, ${groups.length}개 모둠 구성이 완료되었습니다.`;
+}
+const draw=$('draw');
+draw.addEventListener('click',e=>{if(e.button===0)makeGroups(false);});
+draw.addEventListener('contextmenu',e=>{e.preventDefault();makeGroups(false);});
+draw.addEventListener('mousedown',e=>{if(e.button===1)e.preventDefault();});
+draw.addEventListener('auxclick',e=>{e.preventDefault();if(e.button===1)makeGroups(true);});
+</script>
+</body>
+</html>
+
