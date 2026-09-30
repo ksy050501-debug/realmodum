@@ -6,71 +6,166 @@
 <title>우리 반 모둠 만들기</title>
 <style>
 :root{font-family:system-ui,'Malgun Gothic',sans-serif;color:#19342f;background:#f3f6f2}*{box-sizing:border-box}body{margin:0}main{max-width:1100px;margin:auto;padding:48px 24px}header{display:flex;justify-content:space-between;align-items:center;gap:20px}.eyebrow{font-size:12px;letter-spacing:3px;font-weight:800;color:#628177}h1{font-size:clamp(28px,5vw,44px);margin:10px 0}p{color:#647970;line-height:1.7}button,input,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:12px;padding:13px 20px;font-weight:700;background:#e4ebe5;color:#23483d}button:hover{filter:brightness(.96)}button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #d39b42;outline-offset:3px}.hero{margin:32px 0;background:#173f34;color:white;padding:38px;border-radius:24px;display:flex;justify-content:space-between;align-items:center;gap:24px}.hero p{color:#c0d7cb;margin-bottom:0}.hero h2{margin:0;font-size:25px}#draw{background:#e5edb5;color:#24402a;font-size:18px;min-width:170px;padding:20px;user-select:none}#status{min-height:28px}#results{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}.group{border:1px solid #dce5db;background:#fff;border-radius:18px;padding:24px;animation:appear .35s ease both}.group h2{font-size:18px;margin:0 0 18px}.group small{float:right;color:#8a998e;font-weight:400}.names{display:flex;gap:9px;flex-wrap:wrap}.name{background:#eff4ec;padding:9px 13px;border-radius:9px}.empty{grid-column:1/-1;text-align:center;padding:64px 20px;border:2px dashed #d2ddd1;border-radius:20px;color:#819085}dialog{width:min(760px,calc(100% - 24px));max-height:90vh;border:0;border-radius:22px;padding:28px;color:#19342f}dialog::backdrop{background:#142e26aa}dialog h2{margin-top:0}.fields{display:grid;grid-template-columns:1fr 1fr;gap:20px}label{display:block;font-weight:700;margin:16px 0 8px}textarea,input{width:100%;border:1px solid #cbd7ce;border-radius:10px;padding:12px;background:#fbfcfa;color:#19342f}textarea{height:230px;resize:vertical;line-height:1.6}.hint{font-size:13px;line-height:1.6;color:#6b7f73}.actions{display:flex;justify-content:flex-end;gap:10px;margin-top:22px}.primary{background:#245b46;color:#fff}#error{color:#ac352a;white-space:pre-line}footer{margin-top:30px;font-size:12px;color:#829286}@keyframes appear{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}@media(max-width:600px){main{padding:28px 16px}.hero{flex-direction:column;align-items:stretch;padding:26px}.fields{grid-template-columns:1fr}header button{white-space:nowrap;padding:10px}textarea{height:170px}}@media(prefers-reduced-motion:reduce){.group{animation:none}}
-</style>
+#titleButton{font:inherit;color:inherit;background:none;padding:0;text-align:left;user-select:none;touch-action:none} .toggle{display:flex;align-items:center;gap:12px}.toggle input{width:22px;height:22px}.gender-row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:8px 0}.gender-row select{padding:8px;border:1px solid #cbd7ce;border-radius:8px}#genderList{max-height:260px;overflow:auto}.cover{width:100%;min-height:110px;background:#e5edb5;margin-top:8px}#privateError{color:#ac352a} [hidden]{display:none!important}</style>
 </head>
 <body>
 <main>
-<header><div><div class="eyebrow">CLASSROOM TOGETHER</div><h1>우리 반 모둠 만들기</h1><p>함께할 친구들, 새로운 모둠으로 만나보세요.</p></div><button id="settings">설정</button></header>
+<header><div><div class="eyebrow">CLASSROOM TOGETHER</div><h1><button id="titleButton">우리 반 모둠 만들기</button></h1><p>함께할 친구들, 새로운 모둠으로 만나보세요.</p></div><button id="settings">설정</button></header>
 <section class="hero"><div><h2>오늘은 누구와 함께할까요?</h2><p id="summary"></p></div><button id="draw">모둠 만들기 ↗</button></section>
 <p id="status" role="status" aria-live="polite">버튼을 눌러 모둠을 만들어 보세요.</p>
 <section id="results" aria-label="모둠 배정 결과"><div class="empty">아직 모둠이 구성되지 않았어요.</div></section>
 <footer>우리 반의 새로운 시작</footer>
 </main>
-<dialog id="dialog">
-<form id="form">
+<dialog id="dialog"><form id="form">
 <h2>모둠 설정</h2>
-<p class="hint">명단을 입력하고 모둠 수를 선택하세요. 지정 모둠은 각 줄에 한 모둠씩 입력합니다.</p>
 <label for="count">모둠 수</label><input id="count" type="number" min="1" max="100" required>
-<div class="fields"><div><label for="roster">학생 명단</label><textarea id="roster" required placeholder="김민준&#10;이서연&#10;박지호"></textarea><div class="hint">줄바꿈 또는 쉼표로 구분합니다. 동명이인은 번호를 붙여 구별하세요.</div></div>
-<div><label for="preset">미리 지정할 모둠</label><textarea id="preset" placeholder="김민준, 이서연&#10;박지호, 최하윤"></textarea><div class="hint">한 줄이 한 모둠입니다. 학생은 쉼표로 구분하고 명단의 모든 학생을 한 번씩 넣으세요. 비워두어도 무작위 배정은 가능합니다.</div></div></div>
-<p class="hint">사용법: 만들기 버튼의 좌클릭·우클릭은 무작위 배정, 휠 버튼 클릭은 지정 배정입니다. 두 방식의 결과 화면은 동일합니다. 설정은 이 브라우저에 저장되며, 비밀번호로 보호되지 않습니다.</p>
+<label for="roster">학생 명단</label><textarea id="roster" required></textarea>
+<p class="hint">줄바꿈 또는 쉼표로 구분합니다. 동명이인은 번호를 붙여 구별하세요.</p>
+<label class="toggle"><input id="balance" type="checkbox" role="switch">성비 조절하기 <span id="balanceState"></span></label>
+<p class="hint">켜면 입력한 성별을 기준으로 각 모둠에 남학생과 여학생을 최대한 고르게 배정합니다.</p>
+<div id="genderPanel" hidden><div id="genderList"></div></div>
+<label class="toggle"><input id="covered" type="checkbox" role="switch">덮개 <span id="coverState"></span></label>
+<p class="hint">켜면 모둠별 덮개를 클릭할 때 이름이 공개됩니다.</p>
+<p class="hint">설정은 현재 브라우저에 저장됩니다. 다른 기기나 주소로 옮기기 전에는 백업을 저장하세요.</p>
+<div class="actions"><button type="button" id="export">백업 저장</button><button type="button" id="import">백업 불러오기</button></div>
+<input type="file" id="backupFile" accept=".json,application/json" hidden>
 <p id="error" role="alert"></p><div class="actions"><button type="button" id="cancel">취소</button><button class="primary" type="submit">설정 저장</button></div>
-</form>
-</dialog>
+</form></dialog>
+<dialog id="privateDialog"><form id="privateForm">
+<h2>지정 모둠 설정</h2><p class="hint">한 줄에 한 모둠씩, 이름은 쉼표로 구분하세요. 현재 명단의 모든 학생을 한 번씩 넣고 모둠 수를 맞추세요. 휠 버튼 클릭 시 이 구성을 그대로 사용합니다.</p>
+<label for="preset">지정 모둠</label><textarea id="preset"></textarea>
+<p class="hint">일반 설정에서는 이 내용을 표시하지 않습니다. 이 기능은 비밀번호 잠금이 아닙니다.</p>
+<p id="privateError" role="alert"></p><div class="actions"><button type="button" id="privateCancel">취소</button><button class="primary" type="submit">저장</button></div>
+</form></dialog>
 <script>
 'use strict';
-const $=id=>document.getElementById(id),KEY='classroom-groups-v1';
+const $=id=>document.getElementById(id),KEY='classroom-groups-v1',BACKUP=KEY+'-backup';
 const demo=['김민준','이서연','박지호','최하윤','정도윤','강서윤','조예준','윤지우','장시우','임하린','한주원','오수아'];
-let config={roster:demo,count:3,preset:[demo.slice(0,4),demo.slice(4,8),demo.slice(8,12)]};
+let config={roster:demo,count:3,preset:[demo.slice(0,4),demo.slice(4,8),demo.slice(8,12)],genders:{},balance:false,covered:false};
+const splitNames=s=>s.split(/[\n,]+/).map(n=>n.trim()).filter(Boolean);
 function validate(c){
  if(!c||!Array.isArray(c.roster)||!c.roster.length||c.roster.some(n=>typeof n!=='string'||!n.trim()))throw Error('학생 명단을 입력하세요.');
- if(new Set(c.roster).size!==c.roster.length)throw Error('명단에 같은 이름이 있습니다. 번호를 붙여 구분하세요.');
- if(!Number.isInteger(c.count)||c.count<1||c.count>100||c.count>c.roster.length)throw Error('모둠 수는 1 이상, 학생 수 이하의 정수로 입력하세요. (최대 100)');
- if(!Array.isArray(c.preset))throw Error('지정 모둠 형식을 확인하세요.');
- if(c.preset.length){
-  if(c.preset.length!==c.count||c.preset.some(g=>!Array.isArray(g)||!g.length))throw Error('지정 모둠의 줄 수와 모둠 수를 맞춰주세요.');
-  const flat=c.preset.flat();
-  if(flat.length!==c.roster.length||new Set(flat).size!==flat.length||flat.some(n=>!c.roster.includes(n)))throw Error('지정 모둠에는 명단의 모든 학생을 정확히 한 번씩 넣어주세요.');
- }
- return c;
+ if(new Set(c.roster).size!==c.roster.length)throw Error('같은 이름에 번호를 붙여 구분하세요.');
+ if(!Number.isInteger(c.count)||c.count<1||c.count>100||c.count>c.roster.length)throw Error('모둠 수는 학생 수 이하, 1~100 사이의 정수여야 합니다.');
+ if(!Array.isArray(c.preset)||c.preset.some(g=>!Array.isArray(g)||g.some(n=>typeof n!=='string')))throw Error('저장된 모둠 형식을 확인하세요.');
+ const genders=c.genders&&typeof c.genders==='object'&&!Array.isArray(c.genders)?c.genders:{};
+ return {...c,genders:Object.fromEntries(Object.entries(genders).filter(([n,g])=>['M','F'].includes(g))),balance:c.balance===true,covered:c.covered===true};
 }
-try{const saved=localStorage.getItem(KEY);if(saved)config=validate(JSON.parse(saved));}catch{}
-function summary(){$('summary').textContent=`학생 ${config.roster.length}명 · ${config.count}개 모둠`;}
+function validPreset(c){
+ const flat=c.preset.flat();
+ return c.preset.length===c.count&&c.preset.every(g=>g.length)&&flat.length===c.roster.length&&new Set(flat).size===flat.length&&flat.every(n=>c.roster.includes(n));
+}
+let storageProblem=false;
+try{
+ const saved=localStorage.getItem(KEY);
+ if(saved){try{config=validate(JSON.parse(saved));}catch{
+  const backup=localStorage.getItem(BACKUP);
+  if(backup){config=validate(JSON.parse(backup));$('status').textContent='백업 설정을 복구했습니다.';}
+  storageProblem=true;
+ }}
+}catch{storageProblem=true;}
+if(storageProblem)$('status').textContent='저장 데이터 확인이 필요합니다. 기존 데이터는 덮어쓰지 않았습니다. 백업을 확인해 주세요.';
+function persist(next){
+ const checked=validate(next);
+ // Keep the old key and preserve its previous contents before every update.
+ try{const previous=localStorage.getItem(KEY);if(previous)localStorage.setItem(BACKUP,previous);localStorage.setItem(KEY,JSON.stringify(checked));}
+ catch{throw Error('브라우저에 저장하지 못했습니다. 기존 설정은 유지됩니다. 저장 공간 또는 브라우저 설정을 확인하세요.');}
+ config=checked;summary();
+}
+function summary(){$('summary').textContent='학생 '+config.roster.length+'명 · '+config.count+'개 모둠';}
 summary();
-$('settings').addEventListener('click',()=>{
- $('roster').value=config.roster.join('\n');$('count').value=config.count;$('preset').value=config.preset.map(g=>g.join(', ')).join('\n');$('error').textContent='';$('dialog').showModal();
-});
+let draftGenders={};
+function toggles(){
+ $('balanceState').textContent=$('balance').checked?'ON':'OFF';
+ $('coverState').textContent=$('covered').checked?'ON':'OFF';
+ $('genderPanel').hidden=!$('balance').checked;
+}
+function genderRows(){
+ const list=$('genderList');list.replaceChildren();
+ for(const name of [...new Set(splitNames($('roster').value))]){
+  const row=document.createElement('label');row.className='gender-row';
+  const text=document.createElement('span');text.textContent=name;
+  const select=document.createElement('select');select.setAttribute('aria-label',name+' 성별');
+  for(const [v,t] of [['','선택'],['M','남'],['F','여']]){const o=document.createElement('option');o.value=v;o.textContent=t;select.append(o);}
+  select.value=draftGenders[name]||'';select.addEventListener('change',()=>{draftGenders[name]=select.value;});
+  row.append(text,select);list.append(row);
+ }
+}
+function fillSettings(){
+ $('roster').value=config.roster.join('\n');$('count').value=config.count;
+ $('balance').checked=config.balance;$('covered').checked=config.covered;
+ draftGenders=Object.assign(Object.create(null),config.genders);genderRows();toggles();$('error').textContent='';
+}
+$('settings').addEventListener('click',()=>{fillSettings();$('dialog').showModal();});
+$('roster').addEventListener('input',genderRows);
+$('balance').addEventListener('change',toggles);$('covered').addEventListener('change',toggles);
 $('cancel').addEventListener('click',()=>$('dialog').close());
 $('form').addEventListener('submit',e=>{
- e.preventDefault();
- try{
-  const next=validate({roster:$('roster').value.split(/[\n,]+/).map(s=>s.trim()).filter(Boolean),count:Number($('count').value),preset:$('preset').value.split(/\r?\n/).map(s=>s.trim()).filter(Boolean).map(s=>s.split(',').map(n=>n.trim()).filter(Boolean))});
-  let persisted=true;try{localStorage.setItem(KEY,JSON.stringify(next));}catch{persisted=false;}
-  config=next;summary();$('results').replaceChildren();const empty=document.createElement('div');empty.className='empty';empty.textContent='설정을 저장했어요. 모둠을 만들어 보세요.';$('results').append(empty);
-  $('status').textContent=persisted?'설정이 저장되었습니다.': '설정을 적용했습니다. 브라우저 저장이 제한되어 창을 닫으면 사라질 수 있습니다.';$('dialog').close();
+ e.preventDefault();try{
+  const next=validate({...config,roster:splitNames($('roster').value),count:Number($('count').value),genders:{...draftGenders},balance:$('balance').checked,covered:$('covered').checked});
+  if(next.balance&&next.roster.some(n=>!['M','F'].includes(next.genders[n])))throw Error('성비 조절을 켜려면 모든 학생의 성별을 선택하세요.');
+  persist(next);$('results').replaceChildren();$('status').textContent='설정을 저장했습니다. 모둠을 만들어 보세요.';$('dialog').close();
  }catch(err){$('error').textContent=err.message;}
 });
+function openPrivate(){
+ $('preset').value=config.preset.map(g=>g.join(', ')).join('\n');$('privateError').textContent='';$('privateDialog').showModal();
+}
+let holdTimer=null;
+const title=$('titleButton');
+function cancelHold(){clearTimeout(holdTimer);holdTimer=null;}
+function startHold(){if(holdTimer===null)holdTimer=setTimeout(()=>{cancelHold();openPrivate();},5000);}
+title.addEventListener('pointerdown',e=>{if(e.button===0){title.setPointerCapture(e.pointerId);startHold();}});
+title.addEventListener('pointermove',e=>{const r=title.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)cancelHold();});
+for(const event of ['pointerup','pointercancel','lostpointercapture','blur'])title.addEventListener(event,cancelHold);
+title.addEventListener('keydown',e=>{if([' ','Enter'].includes(e.key)){e.preventDefault();if(!e.repeat)startHold();}});
+title.addEventListener('keyup',cancelHold);title.addEventListener('contextmenu',e=>e.preventDefault());
+window.addEventListener('blur',cancelHold);document.addEventListener('visibilitychange',()=>{if(document.hidden)cancelHold();});
+$('privateCancel').addEventListener('click',()=>$('privateDialog').close());
+$('privateForm').addEventListener('submit',e=>{
+ e.preventDefault();try{
+  const preset=$('preset').value.split(/\r?\n/).map(s=>s.trim()).filter(Boolean).map(splitNames);
+  const next={...config,preset};
+  if(preset.length&&!validPreset(next))throw Error('명단의 모든 학생을 한 번씩 넣고 모둠 수를 맞춰 주세요.');
+  persist(next);$('privateDialog').close();
+ }catch(err){$('privateError').textContent=err.message;}
+});
+$('export').addEventListener('click',()=>{
+ const url=URL.createObjectURL(new Blob([JSON.stringify(config,null,2)],{type:'application/json'}));
+ const a=document.createElement('a');a.href=url;a.download='realmodum-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ $('error').textContent='저장된 설정을 백업했습니다. 아직 저장하지 않은 편집 내용은 포함되지 않습니다.';
+});
+$('import').addEventListener('click',()=>$('backupFile').click());
+$('backupFile').addEventListener('change',async e=>{
+ const file=e.target.files[0];if(!file)return;
+ try{const next=validate(JSON.parse(await file.text()));persist(next);fillSettings();$('results').replaceChildren();$('status').textContent='백업 설정을 불러왔습니다.';}
+ catch(err){$('error').textContent='백업을 불러오지 못했습니다. '+err.message;}finally{e.target.value='';}
+});
 function randomInt(max){const a=new Uint32Array(1),limit=4294967296-4294967296%max;do{crypto.getRandomValues(a);}while(a[0]>=limit);return a[0]%max;}
-function makeGroups(fixed){
- if(fixed&&!config.preset.length){$('status').textContent='설정에서 모둠 구성을 확인해 주세요.';return;}
- let groups;
- if(fixed){groups=config.preset.map(g=>[...g]);}else{
-  const shuffled=[...config.roster];for(let i=shuffled.length-1;i>0;i--){const j=randomInt(i+1);[shuffled[i],shuffled[j]]=[shuffled[j],shuffled[i]];}
-  groups=Array.from({length:config.count},()=>[]);shuffled.forEach((name,i)=>groups[i%config.count].push(name));
- }
+function shuffle(items){const a=[...items];for(let i=a.length-1;i>0;i--){const j=randomInt(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;}
+function randomGroups(c){
+ const groups=Array.from({length:c.count},()=>[]);
+ // Distribute each gender in a continuous cycle: both total sizes and each
+ // gender's counts differ by at most one across groups.
+ const names=c.balance?shuffle(['M','F']).flatMap(g=>shuffle(c.roster.filter(n=>c.genders[n]===g))):shuffle(c.roster);
+ names.forEach((n,i)=>groups[i%c.count].push(n));
+ return shuffle(groups.map(shuffle));
+}
+function renderGroups(groups){
  $('results').replaceChildren();
- groups.forEach((names,i)=>{const card=document.createElement('article');card.className='group';card.style.animationDelay=`${i*35}ms`;const title=document.createElement('h2');title.textContent=`${i+1}모둠`;const size=document.createElement('small');size.textContent=`${names.length}명`;title.append(size);const list=document.createElement('div');list.className='names';names.forEach(name=>{const el=document.createElement('span');el.className='name';el.textContent=name;list.append(el);});card.append(title,list);$('results').append(card);});
- $('status').textContent=`${config.roster.length}명, ${groups.length}개 모둠 구성이 완료되었습니다.`;
+ groups.forEach((names,i)=>{
+  const card=document.createElement('article');card.className='group';card.style.animationDelay=i*35+'ms';
+  const heading=document.createElement('h2');heading.textContent=(i+1)+'모둠';const size=document.createElement('small');size.textContent=names.length+'명';heading.append(size);card.append(heading);
+  function reveal(){const list=document.createElement('div');list.className='names';names.forEach(n=>{const el=document.createElement('span');el.className='name';el.textContent=n;list.append(el);});card.append(list);}
+  if(config.covered){const cover=document.createElement('button');cover.className='cover';cover.textContent='클릭해서 공개';cover.setAttribute('aria-label',(i+1)+'모둠 공개');cover.addEventListener('click',()=>{cover.remove();reveal();},{once:true});card.append(cover);}
+  else reveal();
+  $('results').append(card);
+ });
+ $('status').textContent=config.roster.length+'명, '+groups.length+'개 모둠 구성이 완료되었습니다.';
+}
+function makeGroups(fixed){
+ if(fixed){if(!validPreset(config)){$('status').textContent='모둠 구성을 확인해 주세요.';return;}renderGroups(config.preset.map(g=>[...g]));return;}
+ if(config.balance&&config.roster.some(n=>!['M','F'].includes(config.genders[n]))){$('status').textContent='설정에서 학생별 성별을 선택해 주세요.';return;}
+ renderGroups(randomGroups(config));
 }
 const draw=$('draw');
 draw.addEventListener('click',e=>{if(e.button===0)makeGroups(false);});
