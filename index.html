@@ -6,7 +6,7 @@
 <title>우리 반 모둠 만들기</title>
 <style>
 :root{font-family:system-ui,'Malgun Gothic',sans-serif;color:#19342f;background:#f3f6f2}*{box-sizing:border-box}body{margin:0}main{max-width:1100px;margin:auto;padding:48px 24px}header{display:flex;justify-content:space-between;align-items:center;gap:20px}.eyebrow{font-size:12px;letter-spacing:3px;font-weight:800;color:#628177}h1{font-size:clamp(28px,5vw,44px);margin:10px 0}p{color:#647970;line-height:1.7}button,input,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:12px;padding:13px 20px;font-weight:700;background:#e4ebe5;color:#23483d}button:hover{filter:brightness(.96)}button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #d39b42;outline-offset:3px}.hero{margin:32px 0;background:#173f34;color:white;padding:38px;border-radius:24px;display:flex;justify-content:space-between;align-items:center;gap:24px}.hero p{color:#c0d7cb;margin-bottom:0}.hero h2{margin:0;font-size:25px}#draw{background:#e5edb5;color:#24402a;font-size:18px;min-width:170px;padding:20px;user-select:none}#status{min-height:28px}#results{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}.group{border:1px solid #dce5db;background:#fff;border-radius:18px;padding:24px;animation:appear .35s ease both}.group h2{font-size:18px;margin:0 0 18px}.group small{float:right;color:#8a998e;font-weight:400}.names{display:flex;gap:9px;flex-wrap:wrap}.name{background:#eff4ec;padding:9px 13px;border-radius:9px}.empty{grid-column:1/-1;text-align:center;padding:64px 20px;border:2px dashed #d2ddd1;border-radius:20px;color:#819085}dialog{width:min(760px,calc(100% - 24px));max-height:90vh;border:0;border-radius:22px;padding:28px;color:#19342f}dialog::backdrop{background:#142e26aa}dialog h2{margin-top:0}.fields{display:grid;grid-template-columns:1fr 1fr;gap:20px}label{display:block;font-weight:700;margin:16px 0 8px}textarea,input{width:100%;border:1px solid #cbd7ce;border-radius:10px;padding:12px;background:#fbfcfa;color:#19342f}textarea{height:230px;resize:vertical;line-height:1.6}.hint{font-size:13px;line-height:1.6;color:#6b7f73}.actions{display:flex;justify-content:flex-end;gap:10px;margin-top:22px}.primary{background:#245b46;color:#fff}#error{color:#ac352a;white-space:pre-line}footer{margin-top:30px;font-size:12px;color:#829286}@keyframes appear{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}@media(max-width:600px){main{padding:28px 16px}.hero{flex-direction:column;align-items:stretch;padding:26px}.fields{grid-template-columns:1fr}header button{white-space:nowrap;padding:10px}textarea{height:170px}}@media(prefers-reduced-motion:reduce){.group{animation:none}}
-#titleButton{font:inherit;color:inherit;background:none;padding:0;text-align:left;user-select:none;touch-action:none} .toggle{display:flex;align-items:center;gap:12px}.toggle input{width:22px;height:22px}.gender-row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:8px 0}.gender-row select{padding:8px;border:1px solid #cbd7ce;border-radius:8px}#genderList{max-height:260px;overflow:auto}.name-slot{display:inline-flex;min-width:100px;min-height:44px;align-items:center;justify-content:center}.cover{background:#e5edb5;padding:9px 13px;border-radius:9px;min-width:100px;min-height:44px}.name-slot .name{width:100%;text-align:center;overflow-wrap:anywhere}#privateError{color:#ac352a} [hidden]{display:none!important}</style>
+#titleButton{font:inherit;color:inherit;background:none;padding:0;text-align:left;user-select:none;touch-action:none} .toggle{display:flex;align-items:center;gap:12px}.toggle input{width:22px;height:22px}.gender-row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:8px 0}.gender-row select{padding:8px;border:1px solid #cbd7ce;border-radius:8px}#genderList{max-height:260px;overflow:auto}.name-slot{display:inline-flex;min-width:100px;min-height:44px;align-items:center;justify-content:center}.cover{background:#e5edb5;padding:9px 13px;border-radius:9px;min-width:100px;min-height:44px}.name-slot .name{width:100%;text-align:center;overflow-wrap:anywhere}#privateError{color:#ac352a} [hidden]{display:none!important}.seat-toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.seat-toolbar input{width:90px}.seat-section{margin-top:48px;border-top:1px solid #d2ddd1;padding-top:28px}.seat-scroll{overflow-x:auto;padding:8px 0}.board{background:#245b46;color:white;text-align:center;padding:12px;border-radius:10px;margin:20px 0}.seat-grid{display:grid;gap:16px;min-width:500px}.desk{background:white;border:1px solid #cbd7ce;border-bottom:5px solid #bacdbd;border-radius:12px;padding:12px;text-align:center;min-height:100px}.desk small{display:block;color:#718577;margin-bottom:10px}.desk .name-slot{min-width:0;width:100%}.desk .cover{min-width:0;width:100%;font-size:14px}.desk-empty{border:1px dashed #cbd7ce;background:transparent;color:#8a998e;display:grid;place-items:center}</style>
 </head>
 <body>
 <main>
@@ -14,6 +14,15 @@
 <section class="hero"><div><h2>오늘은 누구와 함께할까요?</h2><p id="summary"></p></div><button id="draw">모둠 만들기 ↗</button></section>
 <p id="status" role="status" aria-live="polite">버튼을 눌러 모둠을 만들어 보세요.</p>
 <section id="results" aria-label="모둠 배정 결과"><div class="empty">아직 모둠이 구성되지 않았어요.</div></section>
+<section class="seat-section" aria-labelledby="seatTitle">
+<h2 id="seatTitle">우리 반 자리 바꾸기</h2>
+<p>한 사람에 한 자리씩, 칠판을 바라보는 1인 좌석입니다. 모둠 만들기와 같은 학생 명단을 사용합니다.</p>
+<div class="seat-toolbar"><label for="seatColumns">가로 자리 수</label><input id="seatColumns" type="number" min="1" max="10" value="5"><button id="seatDraw" class="primary">자리 바꾸기 ↗</button></div>
+<p class="hint">기본 배치는 가로 5자리입니다. 19명이면 4줄에 마지막 한 칸은 빈자리로 표시됩니다. 덮개 설정을 켜면 이름을 하나씩 공개할 수 있습니다. 자리 배정은 성비 조절과 관계없이 무작위로 이루어집니다.</p>
+<p id="seatStatus" role="status" aria-live="polite"></p>
+<div class="board">칠판 · 교실 앞</div>
+<div class="seat-scroll"><div id="seatGrid" class="seat-grid" aria-label="교실 좌석표"></div></div>
+</section>
 <footer>우리 반의 새로운 시작</footer>
 </main>
 <dialog id="dialog"><form id="form">
@@ -49,7 +58,7 @@ function validate(c){
  if(!Number.isInteger(c.count)||c.count<1||c.count>100||c.count>c.roster.length)throw Error('모둠 수는 학생 수 이하, 1~100 사이의 정수여야 합니다.');
  if(!Array.isArray(c.preset)||c.preset.some(g=>!Array.isArray(g)||g.some(n=>typeof n!=='string')))throw Error('저장된 모둠 형식을 확인하세요.');
  const genders=c.genders&&typeof c.genders==='object'&&!Array.isArray(c.genders)?c.genders:{};
- return {...c,genders:Object.fromEntries(Object.entries(genders).filter(([n,g])=>['M','F'].includes(g))),balance:c.balance===true,covered:c.covered===true};
+ return {...c,genders:Object.fromEntries(Object.entries(genders).filter(([n,g])=>['M','F'].includes(g))),balance:c.balance===true,covered:c.covered===true,seatColumns:Number.isInteger(c.seatColumns)&&c.seatColumns>=1&&c.seatColumns<=10?c.seatColumns:5,seatOrder:Array.isArray(c.seatOrder)&&c.seatOrder.every(n=>typeof n==='string')?c.seatOrder:[]};
 }
 function validPreset(c){
  const flat=c.preset.flat();
@@ -70,7 +79,7 @@ function persist(next){
  // Keep the old key and preserve its previous contents before every update.
  try{const previous=localStorage.getItem(KEY);if(previous)localStorage.setItem(BACKUP,previous);localStorage.setItem(KEY,JSON.stringify(checked));}
  catch{throw Error('브라우저에 저장하지 못했습니다. 기존 설정은 유지됩니다. 저장 공간 또는 브라우저 설정을 확인하세요.');}
- config=checked;summary();
+ config=checked;summary();refreshSeats();
 }
 function summary(){$('summary').textContent='학생 '+config.roster.length+'명 · '+config.count+'개 모둠';}
 summary();
@@ -181,6 +190,49 @@ draw.addEventListener('click',e=>{if(e.button===0)makeGroups(false);});
 draw.addEventListener('contextmenu',e=>{e.preventDefault();makeGroups(false);});
 draw.addEventListener('mousedown',e=>{if(e.button===1)e.preventDefault();});
 draw.addEventListener('auxclick',e=>{e.preventDefault();if(e.button===1)makeGroups(true);});
+
+function seatsMatch(c){
+ return Array.isArray(c.seatOrder)&&c.seatOrder.length===c.roster.length&&new Set(c.seatOrder).size===c.roster.length&&c.seatOrder.every(n=>c.roster.includes(n));
+}
+function refreshSeats(){
+ const columns=config.seatColumns||5;
+ $('seatColumns').value=columns;
+ const grid=$('seatGrid');grid.replaceChildren();grid.style.gridTemplateColumns='repeat('+columns+', minmax(0, 1fr))';
+ grid.style.minWidth=Math.max(280,columns*115)+'px';
+ if(!seatsMatch(config)){
+  $('seatStatus').textContent='현재 명단 '+config.roster.length+'명 · 자리 바꾸기를 누르면 배정됩니다.';return;
+ }
+ const total=Math.ceil(config.seatOrder.length/columns)*columns;
+ for(let i=0;i<total;i++){
+  const desk=document.createElement('div');desk.className='desk';
+  if(i>=config.seatOrder.length){desk.className+=' desk-empty';desk.textContent='빈자리';grid.append(desk);continue;}
+  const number=document.createElement('small');number.textContent=(Math.floor(i/columns)+1)+'줄 · '+(i%columns+1)+'번';
+  const slot=document.createElement('span');slot.className='name-slot';
+  const name=config.seatOrder[i];
+  function reveal(){const label=document.createElement('span');label.className='name';label.textContent=name;slot.replaceChildren(label);}
+  if(config.covered){
+   const button=document.createElement('button');button.type='button';button.className='cover';button.textContent='이름 공개';
+   button.setAttribute('aria-label',number.textContent+' 이름 공개');button.addEventListener('click',reveal,{once:true});slot.append(button);
+  }else reveal();
+  desk.append(number,slot);grid.append(desk);
+ }
+ $('seatStatus').textContent=config.roster.length+'명 · 가로 '+columns+'자리 × '+Math.ceil(config.roster.length/columns)+'줄 · 배정 결과가 저장되었습니다.';
+}
+function seatColumnInput(){
+ const columns=Number($('seatColumns').value);
+ if(!Number.isInteger(columns)||columns<1||columns>10)throw Error('가로 자리 수를 1~10 사이의 정수로 입력하세요.');
+ return columns;
+}
+$('seatDraw').addEventListener('click',()=>{
+ try{persist({...config,seatColumns:seatColumnInput(),seatOrder:shuffle(config.roster)});}
+ catch(err){$('seatStatus').textContent=err.message;}
+});
+$('seatColumns').addEventListener('change',()=>{
+ try{persist({...config,seatColumns:seatColumnInput()});}
+ catch(err){$('seatStatus').textContent=err.message;}
+});
+refreshSeats();
+
 </script>
 </body>
 </html>
