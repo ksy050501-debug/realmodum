@@ -236,7 +236,12 @@ function openFixedEditor(){
  const saved=config.fixedSeats;
  fixedDraft=saved&&saved.positions&&typeof saved.positions==='object'?{...saved.positions}:{};
  $('fixedColumns').value=saved&&validFixedColumns(saved.columns)?saved.columns:(config.seatColumns||5);
- $('fixedError').textContent='';renderFixedEditor();
+ const seen=new Set();let repaired=false;
+ for(const [index,name] of Object.entries(fixedDraft)){
+  if(seen.has(name)){delete fixedDraft[index];repaired=true;}else seen.add(name);
+ }
+ $('fixedError').textContent=repaired?'중복 지정된 학생은 첫 자리만 남겼습니다. 확인 후 저장해 주세요.':'';
+ renderFixedEditor();
 }
 function renderFixedEditor(){
  const columns=Number($('fixedColumns').value);
@@ -252,8 +257,24 @@ function renderFixedEditor(){
   const current=fixedDraft[i];
   if(current&&!config.roster.includes(current)){const missing=document.createElement('option');missing.value=current;missing.textContent=current+' (명단에 없음)';select.append(missing);}
   select.value=current||'';
-  select.addEventListener('change',()=>{if(select.value)fixedDraft[i]=select.value;else delete fixedDraft[i];$('fixedError').textContent='변경 내용을 저장해 주세요.';});
+  select.addEventListener('change',()=>{
+   const name=select.value;
+   if(name&&Object.entries(fixedDraft).some(([index,assigned])=>Number(index)!==i&&assigned===name)){
+    select.value=fixedDraft[i]||'';$('fixedError').textContent='이미 다른 자리에 고정된 학생입니다. 기존 자리를 무작위로 바꾼 뒤 선택하세요.';syncFixedOptions();return;
+   }
+   if(name)fixedDraft[i]=name;else delete fixedDraft[i];
+   syncFixedOptions();$('fixedError').textContent='변경 내용을 저장해 주세요.';
+  });
   cell.append(label,select);grid.append(cell);
+ }
+ syncFixedOptions();
+}
+function syncFixedOptions(){
+ const assigned=new Set(Object.values(fixedDraft));
+ for(const select of $('fixedGrid').querySelectorAll('select')){
+  for(const option of select.options){
+   option.disabled=Boolean(option.value&&option.value!==select.value&&assigned.has(option.value));
+  }
  }
 }
 function fixedSeatOrder(roster,settings,shuffleFn=shuffle){
